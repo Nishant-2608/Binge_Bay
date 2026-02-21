@@ -1,0 +1,16 @@
+# Backend
+binge-bay-backend/target/
+binge-bay-backend/.idea/
+binge-bay-backend/**/*.iml
+
+# Sensitive credentials — never commit
+binge-bay-backend/src/main/resources/application.properties
+
+# Frontend (for later)
+binge-bay-frontend/node_modules/
+binge-bay-frontend/dist/
+binge-bay-frontend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
