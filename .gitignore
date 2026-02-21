@@ -10,6 +10,7 @@ binge-bay-backend/src/main/resources/application.properties
 binge-bay-frontend/node_modules/
 binge-bay-frontend/dist/
 binge-bay-frontend/.env
+binge-bay-frontend/.env.local
 
 # OS files
 .DS_Store
