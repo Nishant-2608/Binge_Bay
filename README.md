@@ -18,7 +18,7 @@ built as a personal project to learn full-stack development.
 |-------|-----------|
 | Frontend | React.js, Tailwind CSS, Framer Motion |
 | Backend | Java Spring Boot, Spring Security |
-| Database | MySQL |
+| Database | PostgreSQL | -> Supabase |
 | Auth | JWT (JSON Web Tokens) |
 | Movie Data | TMDB API |
 
