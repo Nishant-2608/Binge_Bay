@@ -19,13 +19,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.http.HttpMethod;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
@@ -57,6 +61,10 @@ public class SecurityConfig {
                                             HttpServletResponse response,
                                             FilterChain filterChain) throws ServletException, IOException {
                 String authHeader = request.getHeader("Authorization");
+                log.info("=== JWT Filter === Path: {} | Auth header: {}",
+                    request.getRequestURI(),
+                    authHeader != null ? authHeader.substring(0, Math.min(20, authHeader.length())) + "..." : "NULL");
+
                 String token = null;
                 String email = null;
 
@@ -64,17 +72,27 @@ public class SecurityConfig {
                     token = authHeader.substring(7);
                     try {
                         email = jwtUtil.extractUsername(token);
-                    } catch (Exception ignored) {}
+                        log.info("=== JWT Filter === Extracted email: {}", email);
+                    } catch (Exception e) {
+                        log.error("=== JWT Filter === Error extracting username: {}", e.getMessage());
+                    }
                 }
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService().loadUserByUsername(email);
-                    if (jwtUtil.validateToken(token, userDetails)) {
-                        UsernamePasswordAuthenticationToken authToken =
-                                new UsernamePasswordAuthenticationToken(
-                                        userDetails, null, userDetails.getAuthorities());
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    try {
+                        UserDetails userDetails = userDetailsService().loadUserByUsername(email);
+                        if (jwtUtil.validateToken(token, userDetails)) {
+                            log.info("=== JWT Filter === Token valid for: {}", email);
+                            UsernamePasswordAuthenticationToken authToken =
+                                    new UsernamePasswordAuthenticationToken(
+                                            userDetails, null, userDetails.getAuthorities());
+                            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authToken);
+                        } else {
+                            log.error("=== JWT Filter === Token validation failed for: {}", email);
+                        }
+                    } catch (Exception e) {
+                        log.error("=== JWT Filter === Error loading user: {}", e.getMessage());
                     }
                 }
                 filterChain.doFilter(request, response);
@@ -87,6 +105,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/movies/**").permitAll()
                         .requestMatchers("/api/watchlist/**").authenticated()
