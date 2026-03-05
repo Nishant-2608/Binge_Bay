@@ -21,15 +21,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.http.HttpMethod;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
@@ -61,10 +58,6 @@ public class SecurityConfig {
                                             HttpServletResponse response,
                                             FilterChain filterChain) throws ServletException, IOException {
                 String authHeader = request.getHeader("Authorization");
-                log.info("=== JWT Filter === Path: {} | Auth header: {}",
-                    request.getRequestURI(),
-                    authHeader != null ? authHeader.substring(0, Math.min(20, authHeader.length())) + "..." : "NULL");
-
                 String token = null;
                 String email = null;
 
@@ -72,9 +65,8 @@ public class SecurityConfig {
                     token = authHeader.substring(7);
                     try {
                         email = jwtUtil.extractUsername(token);
-                        log.info("=== JWT Filter === Extracted email: {}", email);
                     } catch (Exception e) {
-                        log.error("=== JWT Filter === Error extracting username: {}", e.getMessage());
+                        System.out.println("JWT Error: " + e.getMessage());
                     }
                 }
 
@@ -82,17 +74,16 @@ public class SecurityConfig {
                     try {
                         UserDetails userDetails = userDetailsService().loadUserByUsername(email);
                         if (jwtUtil.validateToken(token, userDetails)) {
-                            log.info("=== JWT Filter === Token valid for: {}", email);
                             UsernamePasswordAuthenticationToken authToken =
                                     new UsernamePasswordAuthenticationToken(
                                             userDetails, null, userDetails.getAuthorities());
                             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             SecurityContextHolder.getContext().setAuthentication(authToken);
                         } else {
-                            log.error("=== JWT Filter === Token validation failed for: {}", email);
+                            System.out.println("JWT validation failed for: " + email);
                         }
                     } catch (Exception e) {
-                        log.error("=== JWT Filter === Error loading user: {}", e.getMessage());
+                        System.out.println("User load error: " + e.getMessage());
                     }
                 }
                 filterChain.doFilter(request, response);
@@ -104,6 +95,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
