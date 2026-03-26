@@ -1,4 +1,5 @@
 package com.bingebay.binge_bay_backend.controller;
+
 import com.bingebay.binge_bay_backend.dto.*;
 import com.bingebay.binge_bay_backend.service.AuthService;
 import com.bingebay.binge_bay_backend.util.JwtUtil;

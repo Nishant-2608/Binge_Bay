@@ -45,16 +45,11 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-bb-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-bb-muted text-xs">
-            © 2024 Binge Bay. All rights reserved.
+            © 2025 Binge Bay. All rights reserved.
           </p>
           <p className="text-bb-muted text-xs">
             Movie data provided by{' '}
-            
-              href="https://www.themoviedb.org"
-              target="_blank"
-              rel="noreferrer"
-              className="text-bb-red hover:underline"
-            <a>
+            <a href="https://www.themoviedb.org" className="text-bb-red hover:underline" target="_blank" rel="noopener noreferrer"  >
               TMDB
             </a>
           </p>
