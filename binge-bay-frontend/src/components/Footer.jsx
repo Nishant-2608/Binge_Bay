@@ -53,6 +53,12 @@ const Footer = () => {
               TMDB
             </a>
           </p>
+           <p className="text-bb-muted text-xs">
+            Developed by{' '}
+            <a href="https://github.com/Nishant-2608" className="text-bb-red hover:underline" target="_blank" rel="noopener noreferrer">
+              Nishant Tiwari.
+            </a>
+          </p>
         </div>
       </div>
     </footer>
