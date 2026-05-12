@@ -56,8 +56,43 @@ intentionally not included in this repository for security reasons.
 - TMDB image base URL
 
 ## 📸 Screenshots
+### 🏠 Home Page
+<img src="./screenshots/Home_Page.png" width="1000"/>
 
-*Coming soon*
+---
+
+### 🎬 Hero Section
+<img src="./screenshots/Home(Hero).png" width="1000"/>
+
+---
+
+### 🔍 Browse Movies
+<img src="./screenshots/Browse.png" width="1000"/>
+
+---
+
+### 🎭 Browse By Genre
+<img src="./screenshots/Browse(Genre).png" width="1000"/>
+
+---
+
+### 🔎 Search Feature
+<img src="./screenshots/Sreach.png" width="1000"/>
+
+---
+
+### 🔐 Login Page
+<img src="./screenshots/Login.png" width="1000"/>
+
+---
+
+### 📝 Register Page
+<img src="./screenshots/Register.png" width="1000"/>
+
+---
+
+### 🦶 Footer
+<img src="./screenshots/Footer.png" width="1000"/>
 
 ---
 
