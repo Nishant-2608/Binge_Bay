@@ -77,7 +77,7 @@ intentionally not included in this repository for security reasons.
 ---
 
 ### 🔎 Search Feature
-<img src="./screenshots/Sreach.png" width="1000"/>
+<img src="./screenshots/Search.png" width="1000"/>
 
 ---
 
